@@ -1,0 +1,22 @@
+.. _`Troubleshooting`:
+
+Troubleshooting
+===============
+This section describes some common issues that can arise and possible solutions.
+
+Issue #1
+--------
+When connecting your vscode to your database if you recieve an error.
+Make sure your database name, and password match between your .env file and the postgres database.
+Also ensure that you are in your .venv when trying to connect.
+
+Issue #2
+--------
+When making webpages, ensure each element is closed properly.
+Check for </<whatever element> >
+
+Issue #3
+--------
+CSS is not applying to webpage.
+Ensure that the link element in your header contains the correct href, needed to direct to the root directory before pathing towards the correct css folder
+i.e. ../static/css/<whatever>
