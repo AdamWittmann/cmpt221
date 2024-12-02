@@ -1,6 +1,6 @@
 """app.py: render and route to webpages"""
 
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, flash
 from sqlalchemy import insert, text, select
 
 from db.server import app
@@ -12,12 +12,37 @@ from db.schema.user import User
 def index():
     return render_template('index.html')
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if request.method == "POST":
+    #Add to table
+        # query = f"""INSERT INTO "Users" ("FirstName", "LastName", "Email", "PhoneNumber", "Password")
+        #     VALUES('{request.form["FirstName"]}',
+        #             '{request.form["LastName"]}',
+        #             '{request.form["Email"]}',
+        #             '{request.form["PhoneNumber"]}',
+        #             '{request.form["Password"]}'
+        #             );"""
+        
+        #Easy way to insert using User Object
+        query = insert(User).values(request.form)
+        # push the code to the database
+        with app.app_context():
+            db.session.execute(query)
+            db.session.commit()
+        return redirect(url_for('index'))
     return render_template('signup.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == "POST":
+        email = request.form.get('Email')  # Retrieving the email from the form
+        password = request.form.get('Password')  # Retrieving the password from the form
+        user = User.query.filter_by(email=email).first()
+        if user and user.password == password:
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html')
     return render_template('login.html')
 
 @app.route('/users')
